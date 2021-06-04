@@ -1,0 +1,16 @@
+.container{
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.conteudo-login{
+  display: flex;
+  flex-direction: column;
+}
+
+.card-login{
+  width: 300px;
+  box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.4);
+}
