@@ -42,7 +42,9 @@ Agora iremos criar três páginas/componentes, que serão: a <strong> Home (que 
 Utilizaremos os seguintes comandos para criar nossos components diretamente na nossa pasta pages:
 
 <code>ng g c pages/login</code>
+
 <code>ng g c pages/home</code>
+
 <code>ng g c pages/compartilhado/principal</code>
 
 <img src="https://user-images.githubusercontent.com/40209308/120569806-0b594f80-c3ed-11eb-8b2e-6727ed84f9ef.png" width="400">
