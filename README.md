@@ -1,51 +1,64 @@
 # Angular: login/logout, proteger as rotas, storage e enviar o token de usuário nas requisições.
 
-><h4>Introdução</h4>
+# Introdução 
 
-<p>Fazer login/logout, muitas vezes, parece ser algo muito simples, porém, ao nos depararmos com a necessidade do mesmo, vemos que não é tão simples assim, ainda mais para quem não tem tanta intimidade com storage, route guards e token interceptors. Neste artigo, irei explicar de forma simples e prática, como realizar um login/logout completo e funcional utilizando Angular.</p><br/>
+Fazer login/logout, muitas vezes, parece ser algo muito simples, porém, ao nos depararmos com a necessidade do mesmo, vemos que não é tão simples assim, ainda mais para quem não tem tanta intimidade com storage, route guards e token interceptors. Neste artigo, irei explicar de forma simples e prática, como realizar um login/logout completo e funcional utilizando Angular.
 
 
-><h4>Primeiros passos</h4>
+# Primeiros passos
 
-<p>Os primeiros passos é entender o que utilizaremos e o porquê utilizaremos: </br></br>
-  <strong>Storage:</strong> Será o responsável por armazenar os dados do usuário logado localmente, para que possamos utilizá-los quando necessário (IdUsuario, Token, Nome, etc). Se possível, utilize criptografia para armazenar esses dados, pois eles serão visíveis. </br></br>
-	<strong>Route guards ou guarda de rotas:</strong> Será o responsável por verificar se o usuário que está acessando determinada rota, está logado ou não, e assim, redirecioná-lo caso seja necessário. </br></br>
-	<strong>Token interceptor:</strong> Será o responsável por interceptar nossas chamadas https que serão realizadas para alguma API, e que a mesma necessite do token do usuário. Exemplo: o endereço base da nossa API é https://localhost:5001/v1. Sempre que houver uma chamada para essa API, nosso token interceptor irá interceptar essa chamada e adicionar no header o token do usuário. Com isso, você não precisará colocar o token em todas as chamadas que irá fazer para essa API.</p></br>
+Os primeiros passos é entender o que utilizaremos e o porquê utilizaremos:
+
+<strong>Storage:</strong> Será o responsável por armazenar os dados do usuário logado localmente, para que possamos utilizá-los quando necessário (IdUsuario, Token, Nome, etc). Se possível, utilize criptografia para armazenar esses dados, pois eles serão visíveis.
   
-><h4>Bora lá!</h4>
+<strong>Route guards ou guarda de rotas:</strong> Será o responsável por verificar se o usuário que está acessando determinada rota, está logado ou não, e assim, redirecioná-lo caso seja necessário.
+  
+<strong>Token interceptor:</strong> Será o responsável por interceptar nossas chamadas https que serão realizadas para alguma API, e que a mesma necessite do token do usuário. Exemplo: o endereço base da nossa API é https://localhost:5001/v1. Sempre que houver uma chamada para essa API, nosso token interceptor irá interceptar essa chamada e adicionar no header o token do usuário. Com isso, você não precisará colocar o token em todas as chamadas que irá fazer para essa API.
 
-<p>Irei partir do princípio que você já saiba criar um projeto em Angular e tenha os conhecimentos prévios no framework. E caso não saiba, a documentação é muito rica, basta consultar.</br>
 
-Com o projeto já criado, irei utilizar a seguinte estrutura:</p>
-<img src="https://user-images.githubusercontent.com/40209308/120565835-4d31c800-c3e4-11eb-96d4-2fd5dff74171.png" width="600"></br>
+# Bora lá!
+
+Irei partir do princípio que você já saiba criar um projeto em Angular e tenha os conhecimentos prévios no framework. E caso não saiba, a documentação é muito rica, basta consultar.
+
+Com o projeto já criado, irei utilizar a seguinte estrutura:
+
+<img src="https://user-images.githubusercontent.com/40209308/120565835-4d31c800-c3e4-11eb-96d4-2fd5dff74171.png" width="600">
 
 ><h4>Estilizando o projeto</h4>
 
-<p>Para estilizar minhas páginas, formulários, botões, etc, irei utilizar o <strong>Angular Material</strong>, porém, você pode utilizar o framework de sua preferência.</br</br>
+Para estilizar minhas páginas, formulários, botões, etc, irei utilizar o <strong>Angular Material</strong>, porém, você pode utilizar o framework de sua preferência.
 
-Caso queira utilizar o mesmo que eu, basta digitar no seu terminal: <code>ng add @angular/material</code></br>
-Em seguida escolher um tema e dar y (YES) para sempre rsrs.</br>
+Caso queira utilizar o mesmo que eu, basta digitar no seu terminal: <code>ng add @angular/material</code>
+Em seguida escolher um tema e dar y (YES) para sempre rsrs.
 
-Iremos importar os módulos que vamos utilizar do Material em nosso módulo principal app.module.ts, e aproveitando a viagem, iremos importar os módulos necessários para nossos formulários reativos e nossas chamadas HTTPs, que ficará assim: </p>
-<img src="https://user-images.githubusercontent.com/40209308/120567715-c3382e00-c3e8-11eb-953a-d4838a7f43d1.png" width="500"></br>
+Iremos importar os módulos que vamos utilizar do Material em nosso módulo principal app.module.ts, e aproveitando a viagem, iremos importar os módulos necessários para nossos formulários reativos e nossas chamadas HTTPs, que ficará assim:
+<img src="https://user-images.githubusercontent.com/40209308/120567715-c3382e00-c3e8-11eb-953a-d4838a7f43d1.png" width="500">
 
-><h4>Criando nossos componentes</h4>
 
-<p>Agora iremos criar três páginas/componentes, que serão: a <strong> Home (que o usuário só poderá acessar caso já esteja logado)</strong>, a <strong>Login (que o usuário só poderá acessar caso não esteja logado)</strong> e a <strong>Principal (que geralmente utilizamos como layout base, com header e footer)</strong>.</br>
-Utilizaremos os seguintes comandos para criar nossos components diretamente na nossa pasta pages:</p>
-<code>ng g c pages/login</code></br>
-<code>ng g c pages/home</code></br>
-<code>ng g c pages/compartilhado/principal</code><br/>
+# Criando nossos componentes
+
+Agora iremos criar três páginas/componentes, que serão: a <strong> Home (que o usuário só poderá acessar caso já esteja logado)</strong>, a <strong>Login (que o usuário só poderá acessar caso não esteja logado)</strong> e a <strong>Principal (que geralmente utilizamos como layout base, com header e footer)</strong>.
+
+Utilizaremos os seguintes comandos para criar nossos components diretamente na nossa pasta pages:
+
+<code>ng g c pages/login</code>
+<code>ng g c pages/home</code>
+<code>ng g c pages/compartilhado/principal</code>
+
 <img src="https://user-images.githubusercontent.com/40209308/120569806-0b594f80-c3ed-11eb-8b2e-6727ed84f9ef.png" width="400">
+
 <h5>Os arquivos .spec.ts  poderão ser apagados, pois servem para testar a aplicação, e não iremos usá-los no momento.</h5>
 
-<p>Com esses três componentes criados, iremos adicionar suas respectivas rotas no arquivo <strong>app-routing-module.ts</strong>, que ficará assim, por enquanto:</p>
+Com esses três componentes criados, iremos adicionar suas respectivas rotas no arquivo <strong>app-routing-module.ts</strong>, que ficará assim, por enquanto:
+
 <img src="https://user-images.githubusercontent.com/40209308/120570262-1cef2700-c3ee-11eb-983c-87a4a3de51a0.png" width="600">
 
-<p>Perceba que utilizamos uma jogadinha nas rotas, onde a Home e as demais que forem surgir e que também necessitem do layout padrão (header, menu) e login do usuário, serão rotas filhas do component principal. </br>
-Porém, para que tudo funcione como desejamos, será necessário realizar as seguintes alterações:</p>
+Perceba que utilizamos uma jogadinha nas rotas, onde a Home e as demais que forem surgir e que também necessitem do layout padrão (header, menu) e login do usuário, serão rotas filhas do component principal.
 
-Primeiramente, apague tudo no arquivo <strong>app.component.html</strong> e deixe apenas o router-outlet, que como bem sabemos, é o responsável por acessar nossas rotas:</br>
+Porém, para que tudo funcione como desejamos, será necessário realizar as seguintes alterações:
+
+Primeiramente, apague tudo no arquivo <strong>app.component.html</strong> e deixe apenas o router-outlet, que como bem sabemos, é o responsável por acessar nossas rotas:
+
 <img src="https://user-images.githubusercontent.com/40209308/120571280-28dbe880-c3f0-11eb-91c9-dc790369b725.png" width="300">
 
 Agora precisamos inserir nosso HTML e CSS que será utilizado como layout padrão. Abaixo irei mostrar como ficou o meu, porém, você pode brincar à vontade com o seu, caso não queira fazer igual:
@@ -74,13 +87,14 @@ Agora precisamos inserir nosso HTML e CSS que será utilizado como layout padrã
 }
 ```
 
-Observe que existe outro <strong>router-outlet</strong> no componente principal, e será justamente nesse ponto que as rotas filhas do componente principal serão carregadas. Para visualizarmos melhor, agora já podemos testar como está ficando nossa aplicação, utilize o comando <code>ng serve --o</code></br>
+Observe que existe outro <strong>router-outlet</strong> no componente principal, e será justamente nesse ponto que as rotas filhas do componente principal serão carregadas. Para visualizarmos melhor, agora já podemos testar como está ficando nossa aplicação, utilize o comando <code>ng serve --o</code>
 
 <img src="https://user-images.githubusercontent.com/40209308/120814464-465e9e80-c525-11eb-89bc-90e10db7aaaa.png" width="600">
 
-E olha só que bacana o que já temos na nossa rota raíz, o componente <strong>principal</strong> e seu filho <strong>home</strong>...</br></br>
+E olha só que bacana o que já temos na nossa rota raíz, o componente <strong>principal</strong> e seu filho <strong>home</strong>...
 
-><h4>Tela de login</h4>
+
+# Tela de login
 
 Agora, iremos para nossa página de login. Assim como na tela acima, irei passar rapidamente pelos arquivos e ressaltando apenas os pontos relevantes para este artigo. Sinta-se livre para desenhar a tela como desejar. Mas antes que eu me esqueça, iremos primeiro criar nosso <strong>usuario.service.ts</strong> que será onde teremos nossos métodos relacionados ao usuário. 
 
@@ -340,7 +354,7 @@ E olha só que legal o que temos até agora:
 ![](https://user-images.githubusercontent.com/40209308/120829882-4ade8380-c534-11eb-8921-8d6ab7fafa8d.gif)
 
 
-><h4>Protegendo nossas rotas</h4>
+# Protegendo nossas rotas
 
 Bom, realizada as etapas acima, agora precisamos proteger nossas rotas. Se não, qual seria o sentido de ter um login, se o usuário pode digitar na url "http://localhost:4200/" e acessar sem login, não é mesmo?!
 
@@ -457,7 +471,7 @@ Para testar tudo isso, você pode tentar acessar a rota raíz sem estar logado e
 <b>Feito isso, temos um login totalmente funcional!!!!!!! \õ/</b>
 
 
-><h4>Enviando o token do usuário nas requisições</h4>
+# Enviando o token do usuário nas requisições
 
 Como já sabemos, o Angular interage muito bem com comunicações via API, porém, sempre que nos comunicamos via API, precisamos enviar o token do usuário, que comprova que o usuário já está autenticado em determinada API e pode realizar as requisições de acordo com suas permissões. Para isso, iremos utilizar os <b>interceptors</b>. Utilize o comando <code>ng g interceptor services/interceptors/token</code> para gerá-lo. Nosso token.interceptor.ts, ficará assim:
 
@@ -578,7 +592,7 @@ import { TokenInterceptor } from './services/interceptors/token.interceptor';
 export class AppModule { }
 ```
 
-><h4>Finalizando</h4>
+# Finalizando
 
 Bom, por ora é isso pessoal, temos um login totalmente funcional de ponta a ponta!
 
