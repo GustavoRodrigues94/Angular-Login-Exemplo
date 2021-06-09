@@ -32,6 +32,7 @@ Caso queira utilizar o mesmo que eu, basta digitar no seu terminal: <code>ng add
 Em seguida escolher um tema e dar y (YES) para sempre rsrs.
 
 Iremos importar os módulos que vamos utilizar do Material em nosso módulo principal app.module.ts, e aproveitando a viagem, iremos importar os módulos necessários para nossos formulários reativos e nossas chamadas HTTPs, que ficará assim:
+
 <img src="https://user-images.githubusercontent.com/40209308/120567715-c3382e00-c3e8-11eb-953a-d4838a7f43d1.png" width="500">
 
 
